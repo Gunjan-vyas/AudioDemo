@@ -1,5 +1,5 @@
 import "regenerator-runtime/runtime";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import "../App.css";
 import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognition";
 import { Player } from "@lottiefiles/react-lottie-player";
@@ -7,18 +7,18 @@ import success from "../assets/success.json";
 const PocOfCounter = () => {
   const startListening = () => SpeechRecognition.startListening({ continuous: true, language: "en-IN" });
   const stopListening = () => SpeechRecognition.stopListening();
-  const { transcript, interimTranscript, finalTranscript, resetTranscript, browserSupportsSpeechRecognition } = useSpeechRecognition();
+  const { transcript, finalTranscript, resetTranscript, browserSupportsSpeechRecognition } = useSpeechRecognition();
 
   const [count, setCount] = useState(() => {
     // Initialize count from local storage or default to 0
-    const savedCount = parseInt(localStorage.getItem("count"), 10);
+    const savedCount = parseInt(localStorage.getItem("count") || "0", 10);
     return isNaN(savedCount) ? 0 : savedCount;
   });
-  const [onSuccess, setOnSuccess] = useState();
+  const [onSuccess, setOnSuccess] = useState<boolean>();
 
   const onStop = () => {
     console.log("save button cliked", typeof count);
-    localStorage.setItem("count", count);
+    localStorage.setItem("count", count.toString());
   };
 
   const jugaad = () => {
@@ -32,7 +32,7 @@ const PocOfCounter = () => {
     checkSuccess();
   };
 
-  function countOccurrences(text, word) {
+  function countOccurrences(text: string, word: string) {
     // Create a regular expression to match the word with word boundaries
     const regex = new RegExp("\\b" + word + "\\b", "gi");
     console.log("regex", regex);
