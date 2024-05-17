@@ -40,3 +40,29 @@
 .read-the-docs {
   color: #888;
 }
+
+/* my styles */
+.container {
+  /* width: 70vw; */
+  background-color: rgba(235, 25, 255, 0.1);
+  border-radius: 4px;
+}
+.main-cotent {
+  font-size: 16px;
+  word-spacing: normal;
+}
+.btn-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+
+.lottie-container {
+  width: 100%;
+  position: absolute;
+  top: 0;
+  text-align: center;
+  magain: 0 auto;
+}
