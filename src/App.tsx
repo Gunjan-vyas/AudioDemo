@@ -1,8 +1,7 @@
 import "regenerator-runtime/runtime";
 import "./App.css";
 import AudioPermissionChecker from "./components/AudioPermissionChecker";
-// import PocOfCounter from "./components/PocOfCounter";
-import SpeechToTextComponent from "./components/SpeechToTextComponent";
+// import SpeechToTextComponent from "./components/SpeechToTextComponent"; // TODO: NEED to see more on how to do it using google cloud speech api
 import { Analytics } from "@vercel/analytics/react";
 import PocOfCounter from "./components/PocOfCounter";
 //firebase code in notion
