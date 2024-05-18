@@ -4,6 +4,7 @@ import AudioPermissionChecker from "./components/AudioPermissionChecker";
 // import PocOfCounter from "./components/PocOfCounter";
 import SpeechToTextComponent from "./components/SpeechToTextComponent";
 import { Analytics } from "@vercel/analytics/react";
+import PocOfCounter from "./components/PocOfCounter";
 //firebase code in notion
 // const db = getDatabase(app);
 
