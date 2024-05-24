@@ -4,29 +4,52 @@ import "../App.css";
 import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognition";
 import { Player } from "@lottiefiles/react-lottie-player";
 import success from "../assets/success.json";
-const PocOfCounter = () => {
-  const startListening = () => SpeechRecognition.startListening({ continuous: true, language: "en-IN" });
-  const stopListening = () => SpeechRecognition.stopListening();
-  const { transcript, finalTranscript, resetTranscript, browserSupportsSpeechRecognition } = useSpeechRecognition();
 
+const PocOfCounter = () => {
+  const [audioContext, setAudioContext] = useState(null);
   const [count, setCount] = useState(() => {
     // Initialize count from local storage or default to 0
     const savedCount = parseInt(localStorage.getItem("count") || "0", 10);
     return isNaN(savedCount) ? 0 : savedCount;
   });
-  const [onSuccess, setOnSuccess] = useState<boolean>();
+  const [onSuccess, setOnSuccess] = useState(false);
+  const { transcript, resetTranscript, browserSupportsSpeechRecognition } = useSpeechRecognition();
+
+  useEffect(() => {
+    if (!audioContext) {
+      const context = new (window.AudioContext || window.webkitAudioContext)();
+      setAudioContext(context);
+    }
+    return () => {
+      if (audioContext) {
+        audioContext.close();
+      }
+    };
+  }, [audioContext]);
+
+  const startListening = () => {
+    SpeechRecognition.startListening({ continuous: true, language: "en-IN" });
+    // Mute audio context when starting recording
+    if (audioContext) {
+      audioContext.suspend();
+    }
+  };
+
+  const stopListening = () => {
+    SpeechRecognition.stopListening();
+    // Unmute audio context when stopping recording
+    if (audioContext) {
+      audioContext.resume();
+    }
+  };
 
   const onStop = () => {
-    console.log("save button cliked", typeof count);
     localStorage.setItem("count", count.toString());
   };
 
   const jugaad = () => {
     const countedValue = countOccurrences(transcript, "Ram");
-    console.log("occurance", countedValue, transcript, "finalTranscript", finalTranscript);
     setCount(Math.max(count, count + countedValue));
-    // console.log("occurance count", count);
-    // api call to save this count into user account;
     onStop();
     resetTranscript();
     checkSuccess();
@@ -35,8 +58,6 @@ const PocOfCounter = () => {
   function countOccurrences(text: string, word: string) {
     // Create a regular expression to match the word with word boundaries
     const regex = new RegExp("\\b" + word + "\\b", "gi");
-    console.log("regex", regex);
-    // Use match() function with the regular expression to find all occurrences of the word
     const matches = text.match(regex);
     console.log("matches", matches);
     // If matches are found, return the count, otherwise return 0
