@@ -6,7 +6,6 @@ import { Player } from "@lottiefiles/react-lottie-player";
 import success from "../assets/success.json";
 
 const PocOfCounter = () => {
-  const [audioContext, setAudioContext] = useState(null);
   const [count, setCount] = useState(() => {
     // Initialize count from local storage or default to 0
     const savedCount = parseInt(localStorage.getItem("count") || "0", 10);
@@ -16,31 +15,22 @@ const PocOfCounter = () => {
   const { transcript, resetTranscript, browserSupportsSpeechRecognition } = useSpeechRecognition();
 
   useEffect(() => {
-    if (!audioContext) {
-      const context = new (window.AudioContext || window.webkitAudioContext)();
-      setAudioContext(context);
-    }
+    // Initialize the audio context
+    const audioContext = new (window.AudioContext)();
+    // Mute the audio context
+    audioContext.suspend();
     return () => {
-      if (audioContext) {
-        audioContext.close();
-      }
+      // Clean up the audio context when component unmounts
+      audioContext.close();
     };
-  }, [audioContext]);
+  }, []);
 
   const startListening = () => {
     SpeechRecognition.startListening({ continuous: true, language: "en-IN" });
-    // Mute audio context when starting recording
-    if (audioContext) {
-      audioContext.suspend();
-    }
   };
 
   const stopListening = () => {
     SpeechRecognition.stopListening();
-    // Unmute audio context when stopping recording
-    if (audioContext) {
-      audioContext.resume();
-    }
   };
 
   const onStop = () => {
